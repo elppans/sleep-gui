@@ -2,31 +2,37 @@
 
 # Função para exibir uma barra de progresso usando Zenity
 exibir_barra_de_progresso() {
-    local tempo_total="$1"  # Tempo total em segundos
-    local num_segmentos=5   # Número de segmentos (reduzido para 5 para atingir o limite mínimo de 2 segundos)
+  local tempo_total="$1" # Tempo total em segundos
+  local num_segmentos=1  # Número de segmentos (reduzido para 5 para atingir o limite mínimo de 2 segundos) > (Fixo 1 para sem limite)
 
-    local msg_aguarde="Aguarde"
-    local msg_seg="seg."
-    local msg_fim="Fim da espera"
+  local msg_title="Status do progresso"
+  local msg_aguarde="Aguarde"
+  local msg_seg="seg."
+  local msg_fim="Fim da espera"
 
-    # Cálculo dos intervalos de tempo para cada segmento
-    local intervalo=$(expr "$tempo_total" / "$num_segmentos")
+  # Cálculo dos intervalos de tempo para cada segmento
+  # Troca do cálculo dos intervalos para segmento fixo,
+  # Funciona melhor com seq + "tempo_total" em vez de "num_segmentos"
+  # local intervalo=$(expr "$tempo_total" / "$num_segmentos")
+  local intervalo="$num_segmentos"
 
-    # Loop para exibir as mensagens de progresso
-    (
-    for i in $(seq "$num_segmentos" -1 1); do
-        echo "# $msg_aguarde $(expr $i \* $intervalo) $msg_seg"
-        sleep "$intervalo"
+  # Loop para exibir as mensagens de progresso
+  (
+    # for i in $(seq "$num_segmentos" -1 1); do
+    for i in $(seq "$tempo_total" -1 1); do
+      # shellcheck disable=SC2003
+      echo "# $msg_aguarde $(expr "$i" \* $intervalo) $msg_seg"
+      sleep "$intervalo"
     done
-)|
-zenity --progress \
-  --title="Progress Status" \
-  --text="First Task." \
-  --percentage=0 \
-  --pulsate \
-  --auto-close \
-  --auto-kill
+  ) |
+    zenity --progress \
+      --title="${msg_title}" \
+      --text="${msg_fim}" \
+      --percentage=0 \
+      --pulsate \
+      --auto-close \
+      --auto-kill
 }
 
-# Exibe a barra de progresso para 10 segundos
+# Exibe a barra de progresso para "$@" segundos
 exibir_barra_de_progresso "$@"
