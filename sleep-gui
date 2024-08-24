@@ -29,4 +29,4 @@ zenity --progress \
 }
 
 # Exibe a barra de progresso para 10 segundos
-exibir_barra_de_progresso 10
+exibir_barra_de_progresso "$@"
