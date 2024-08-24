@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2003
 
 # Função para exibir uma barra de progresso usando Zenity
 exibir_barra_de_progresso() {
@@ -20,7 +21,6 @@ exibir_barra_de_progresso() {
   (
     # for i in $(seq "$num_segmentos" -1 1); do
     for i in $(seq "$tempo_total" -1 1); do
-      # shellcheck disable=SC2003
       echo "# $msg_aguarde $(expr "$i" \* $intervalo) $msg_seg"
       sleep "$intervalo"
     done
